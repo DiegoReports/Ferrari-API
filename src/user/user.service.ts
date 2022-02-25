@@ -58,4 +58,68 @@ export class UserService {
 
   }
 
+  async create({
+    name,
+    email,
+    birthAt,
+    phone,
+    document,
+    password
+  }: {
+    // Campos não obrigatórios contem "?""
+
+    name: string;
+    email: string;
+    birthAt?: Date;
+    phone?: string;
+    document?: string
+    password: string;
+  }) {
+
+    if (!email) {
+      throw new BadRequestException('E-mail is required.');
+    }
+
+    if (!name) {
+      throw new BadRequestException('Name is required.');
+    }
+
+    if (!password) {
+      throw new BadRequestException('Password is required.');
+    }
+
+    if (birthAt && birthAt.toString().toLowerCase() === 'Invalid Date') {
+      throw new BadRequestException('Birth date Date is Invalid');
+    }
+
+    let user = null;
+
+    try {
+      user = await this.getByEmail(email);
+    } catch (e) {
+
+    }
+
+    if (user) {
+      throw new BadRequestException("Email already exists");
+    }
+
+    return this.prisma.user.create({
+      data: {
+        person: {
+          create: {
+            name,
+            birthAt,
+            document,
+            phone,
+          },
+        },
+        email,
+        password,
+      },
+      include: {
+        person: true,
+      }
+    });
+  }
 }
