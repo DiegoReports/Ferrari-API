@@ -21,13 +21,17 @@ model Person {
   document  String?   @db.VarChar(14)
   createdAt DateTime  @default(now()) @db.DateTime(0)
   updatedAt DateTime  @default(now()) @db.DateTime(0)
+<<<<<<< HEAD
   Contact   Contact[] @relation("contactsTopersons")
+=======
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
   User      User[]
 
   @@map("persons")
 }
 
 model User {
+<<<<<<< HEAD
   id               Int                @id @default(autoincrement())
   email            String             @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar(250)
   password         String             @db.VarChar(250)
@@ -76,4 +80,17 @@ model TimeOptions {
   updatedAt DateTime @default(now()) @db.DateTime(0)
 
   @@map("time_options")
+=======
+  id        Int      @id @default(autoincrement())
+  email     String   @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar(250)
+  password  String   @db.VarChar(250)
+  photo     String?  @db.VarChar(255)
+  personId  Int
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @db.DateTime(0)
+  person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_users_persons")
+
+  @@index([personId], map: "FK_users_persons")
+  @@map("users")
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
 }

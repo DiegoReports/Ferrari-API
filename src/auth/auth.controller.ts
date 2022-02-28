@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   BadRequestException,
   Body,
@@ -11,10 +12,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+=======
+import { BadRequestException, Body, Controller, Get, Headers, Post, Req, UseGuards } from '@nestjs/common';
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
 import { UserService } from 'src/user/user.service';
 import { parse } from 'date-fns';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+<<<<<<< HEAD
 import { Auth } from './auth.decorator';
 import { User } from 'src/user/user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -30,6 +35,17 @@ export class AuthController {
 
   @Post()
   async verifyEmail(@Body('email') email) {
+=======
+
+@Controller('auth')
+export class AuthController {
+
+  constructor(private userService: UserService, private authService: AuthService) { }
+
+  @Post()
+  async verifyEmail(@Body('email') email) {
+
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     try {
       await this.userService.getByEmail(email);
       return { exists: true };
@@ -46,12 +62,26 @@ export class AuthController {
     @Body('phone') phone,
     @Body('document') document,
     @Body('password') password,
+<<<<<<< HEAD
   ) {
     if (birthAt) {
       try {
         birthAt = parse(birthAt, 'yyyy-MM-dd', new Date());
       } catch (e) {
         throw new BadRequestException('Birth date is invalid');
+=======
+
+  ) {
+
+    if (birthAt) {
+      try {
+        // Função do Date-fns que consegue ler e converter string em data
+        birthAt = parse(birthAt, "yyyy-MM-dd", new Date());
+
+      } catch (e) {
+
+        throw new BadRequestException("Birth date is invalid")
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
       }
     }
 
@@ -62,6 +92,10 @@ export class AuthController {
       phone,
       document,
       birthAt,
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     });
 
     const token = await this.authService.getToken(user.id);
@@ -71,6 +105,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body('email') email, @Body('password') password) {
+<<<<<<< HEAD
     return this.authService.login({ email, password });
   }
 
@@ -146,4 +181,18 @@ export class AuthController {
 
     return new StreamableFile(file);
   }
+=======
+
+    return this.authService.login({email, password});
+
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+    async me() {
+      return {
+        sucess: true
+      }
+    }
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
 }

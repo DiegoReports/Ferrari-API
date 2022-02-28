@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   BadRequestException,
   Injectable,
@@ -20,19 +21,45 @@ export class UserService {
 
     if (isNaN(id)) {
       throw new BadRequestException('ID is required');
+=======
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+import {Prisma} from '@prisma/client';
+@Injectable()
+export class UserService {
+
+  constructor(private prisma: PrismaService) { }
+
+  async get(id: number, hash = false) {
+
+    id = Number(id); // Fazendo a conversão para numero. Caso não seja, estamos forçando NaN
+
+    if (isNaN(Number(id))) {
+
+      throw new BadRequestException("Id is required");
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     }
 
     const user = await this.prisma.user.findUnique({
       where: {
+<<<<<<< HEAD
         id,
       },
       include: {
         person: true,
+=======
+        id: id,
+      },
+      include: {
+        person: true
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
       },
     });
 
     if (!hash) {
       delete user.password;
+<<<<<<< HEAD
     }
 
     if (!user) {
@@ -45,6 +72,24 @@ export class UserService {
   async getByEmail(email: string) {
     if (!email) {
       throw new BadRequestException('E-mail is required');
+=======
+    } 
+
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    return user;
+
+  }
+
+  async getByEmail(email: string) {
+
+    if (!email) {
+
+      throw new BadRequestException("E-mail is required");
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     }
 
     const user = await this.prisma.user.findUnique({
@@ -52,22 +97,37 @@ export class UserService {
         email,
       },
       include: {
+<<<<<<< HEAD
         person: true,
+=======
+        person: true
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
       },
     });
 
     delete user.password;
 
+<<<<<<< HEAD
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
     return user;
+=======
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    return user;
+
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
   }
 
   async create({
     name,
     email,
+<<<<<<< HEAD
     password,
     birthAt,
     phone,
@@ -86,24 +146,61 @@ export class UserService {
 
     if (!email) {
       throw new BadRequestException('Email is required.');
+=======
+    birthAt,
+    phone,
+    document,
+    password
+  }: {
+    // Campos não obrigatórios contem "?""
+
+    name: string;
+    email: string;
+    birthAt?: Date;
+    phone?: string;
+    document?: string
+    password: string;
+  }) {
+
+    if (!email) {
+      throw new BadRequestException('E-mail is required.');
+    }
+
+    if (!name) {
+      throw new BadRequestException('Name is required.');
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     }
 
     if (!password) {
       throw new BadRequestException('Password is required.');
     }
 
+<<<<<<< HEAD
     if (birthAt && birthAt.toString().toLowerCase() === 'invalid date') {
       throw new BadRequestException('Birth date is invalid');
+=======
+    if (birthAt && birthAt.toString().toLowerCase() === 'Invalid Date') {
+      throw new BadRequestException('Birth date Date is Invalid');
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     }
 
     let user = null;
 
     try {
       user = await this.getByEmail(email);
+<<<<<<< HEAD
     } catch (e) {}
 
     if (user) {
       throw new BadRequestException('Email already exists');
+=======
+    } catch (e) {
+
+    }
+
+    if (user) {
+      throw new BadRequestException("Email already exists");
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     }
 
     const userCreated = await this.prisma.user.create({
@@ -121,7 +218,11 @@ export class UserService {
       },
       include: {
         person: true,
+<<<<<<< HEAD
       },
+=======
+      }
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
     });
 
     delete userCreated.password;
@@ -129,6 +230,7 @@ export class UserService {
     return userCreated;
   }
 
+<<<<<<< HEAD
   async update(
     id: number,
     {
@@ -155,6 +257,32 @@ export class UserService {
 
     const dataPerson = {} as Prisma.PersonUpdateInput;
     const dataUser = {} as Prisma.UserUpdateInput;
+=======
+  async update (id: number, {
+    name,
+    email,
+    birthAt,
+    phone,
+    document,
+  }: {
+    // Campos não obrigatórios contem "?""
+
+    name: string;
+    email: string;
+    birthAt?: Date;
+    phone?: string;
+    document?: string
+  }) {
+
+    id = Number(id);
+
+    if (isNaN(id)) {
+      throw new BadRequestException("ID is not a number");
+    }
+
+    const dataPerson = {} as Prisma.PersonUpdateInput;
+    const datauser = {} as Prisma.UserUpdateInput;
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
 
     if (name) {
       dataPerson.name = name;
@@ -172,6 +300,7 @@ export class UserService {
       dataPerson.document = document;
     }
 
+<<<<<<< HEAD
     if (email) {
       dataUser.email = email;
     }
@@ -192,10 +321,30 @@ export class UserService {
     }
 
     if (dataUser) {
+=======
+    if(email) {
+      datauser.email = email;
+    }
+
+    // CARREGAMENTO ANTES DAS ALTERAÇÕES
+    const user = await this.get(id);
+
+    if(dataPerson) {
+       await this.prisma.person.update({
+        where: {
+          id: user.id,
+        },
+        data: dataPerson
+      });
+    }
+    
+    if (datauser) {
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
       await this.prisma.user.update({
         where: {
           id,
         },
+<<<<<<< HEAD
         data: dataUser,
       });
     }
@@ -273,5 +422,26 @@ export class UserService {
       file,
       extension,
     };
+=======
+        data: datauser
+      });
+    }
+  
+    // CARREGAMENTO APÒS AS ALTERAÇÕES
+    return this.get(id);
+  }
+
+  async checkPassword(id: number, password: string) {
+
+    const user = await this.get(id, true);
+
+    const checked = await bcrypt.compare(password, user.password);
+
+    if(!checked) {
+      throw new UnauthorizedException("Email of Password is incorrect");
+    }
+
+    return true;
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
   }
 }

@@ -4,7 +4,11 @@
   "port": 3306,
   "username": "root",
   "password": "back",
+<<<<<<< HEAD
   "database": "ferrari",
+=======
+  "database": "ferrari-api",
+>>>>>>> 6f42ee5cf38ae5fc8f7cadb63f17f8e3a856bcdc
   "synchronize": true,
   "logging": false,
   "entities": ["typeorm/entity/**/*.ts"],
