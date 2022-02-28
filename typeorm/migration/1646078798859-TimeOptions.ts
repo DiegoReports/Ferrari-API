@@ -40,7 +40,6 @@ export class TimeOptions1646078798859 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-
         await queryRunner.dropTable("time_options");
     }
 }
